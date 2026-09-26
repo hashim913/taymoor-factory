@@ -1,0 +1,62 @@
+services:
+  redis:
+    image: redis:7-alpine
+    restart: unless-stopped
+    command: redis-server --appendonly yes
+    volumes:
+      - redis_data:/data
+
+  postgres:
+    image: postgres:16-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: telegram_factory
+      POSTGRES_USER: factory
+      POSTGRES_PASSWORD: CHANGE_ME
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+  web:
+    build: .
+    restart: unless-stopped
+    command: python run_web.py
+    env_file: .env
+    depends_on: [redis, postgres]
+
+  main:
+    build: .
+    restart: unless-stopped
+    command: python main.py
+    env_file: .env
+    depends_on: [redis, postgres]
+
+  worker-1:
+    build: .
+    restart: unless-stopped
+    command: python worker.py
+    env_file: .env
+    environment:
+      WORKER_ID: worker-1
+    depends_on: [redis, postgres]
+
+  worker-2:
+    build: .
+    restart: unless-stopped
+    command: python worker.py
+    env_file: .env
+    environment:
+      WORKER_ID: worker-2
+    depends_on: [redis, postgres]
+
+  nginx:
+    image: nginx:1.27-alpine
+    restart: unless-stopped
+    ports:
+      - "80:80"
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf:ro
+    depends_on: [web]
+
+volumes:
+  redis_data:
+  postgres_data:

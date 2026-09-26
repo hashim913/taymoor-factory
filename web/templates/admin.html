@@ -1,0 +1,34 @@
+
+{% extends "base.html" %}
+{% block content %}
+<h1>🛠 لوحة الإدارة</h1>
+<div class="cards">
+<div class="card"><div class="muted">المستخدمون</div><h2>{{ stats.users }}</h2></div>
+<div class="card"><div class="muted">البوتات</div><h2>{{ stats.bots }}</h2></div>
+<div class="card"><div class="muted">البوتات العاملة</div><h2>{{ stats.running }}</h2></div>
+<div class="card"><div class="muted">الرسائل</div><h2>{{ stats.messages }}</h2></div>
+</div>
+<h2>المستخدمون والخطط</h2>
+<table>
+<tr><th>ID</th><th>المستخدم</th><th>الخطة</th><th>الحد</th><th>تعديل</th></tr>
+{% for u in users %}
+<tr>
+<td>{{ u.telegram_id }}</td>
+<td>@{{ u.username or "-" }}</td>
+<td>{{ u.plan }}</td>
+<td>{{ u.bot_limit }}</td>
+<td>
+<form method="post" action="/admin/users/{{ u.telegram_id }}/plan">
+<select name="plan">
+<option value="free" {% if u.plan=="free" %}selected{% endif %}>Free</option>
+<option value="pro" {% if u.plan=="pro" %}selected{% endif %}>Pro</option>
+<option value="business" {% if u.plan=="business" %}selected{% endif %}>Business</option>
+</select>
+<input name="limit" type="number" min="0" value="{{ u.bot_limit }}">
+<button>حفظ</button>
+</form>
+</td>
+</tr>
+{% endfor %}
+</table>
+{% endblock %}

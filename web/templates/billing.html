@@ -1,0 +1,23 @@
+
+{% extends "base.html" %}
+{% block content %}
+<h1>💳 الاشتراك</h1>
+{% if request.query_params.get("requested") %}<div class="card">✅ تم تسجيل طلب الاشتراك. سيتم تفعيله بعد التحقق من الدفع.</div>{% endif %}
+<div class="cards">
+{% for p in plans %}
+<div class="card">
+<h2>{{ p.title }}</h2>
+<p class="price">${{ "%.2f"|format(p.monthly_price/100) }} <span class="muted">/ شهر</span></p>
+<p>حتى {{ p.bot_limit }} بوت</p>
+<form method="post" action="/billing/request">
+<input type="hidden" name="plan" value="{{ p.code }}"><input type="hidden" name="interval" value="monthly">
+<button>طلب اشتراك شهري</button>
+</form>
+<form method="post" action="/billing/request">
+<input type="hidden" name="plan" value="{{ p.code }}"><input type="hidden" name="interval" value="yearly">
+<button>طلب سنوي (${{ "%.2f"|format(p.yearly_price/100) }})</button>
+</form>
+</div>
+{% endfor %}
+</div>
+{% endblock %}

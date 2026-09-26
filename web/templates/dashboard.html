@@ -1,0 +1,29 @@
+
+{% extends "base.html" %}
+{% block content %}
+<h1>لوحة التحكم</h1><p><a class="btn" href="/billing">💳 إدارة الاشتراك</a></p>
+<div class="cards">
+<div class="card"><div class="muted">المستخدم</div><h2>{{ user.first_name or user.username or user.telegram_id }}</h2></div>
+<div class="card"><div class="muted">الخطة</div><h2>{{ user.plan }}</h2></div>
+<div class="card"><div class="muted">البوتات</div><h2>{{ bots|length }} / {{ user.bot_limit }}</h2></div>
+<div class="card"><div class="muted">الحالة</div><h2>{{ user.subscription_status }}</h2></div>
+</div>
+<h2>🤖 بوتاتي</h2>
+<table>
+<tr><th>البوت</th><th>القالب</th><th>الحالة</th><th>الرسائل</th><th>إجراءات</th></tr>
+{% for b in bots %}
+<tr>
+<td><a href="/bots/{{ b.id }}">@{{ b.username }}</a></td>
+<td>{{ b.template }}</td>
+<td class="status">{{ "🟢 يعمل" if b.is_running else "🔴 متوقف" }}</td>
+<td>{{ b.total_messages }}</td>
+<td>
+<form class="inline" method="post" action="/bots/{{ b.id }}/toggle"><button>{{ "إيقاف" if b.is_running else "تشغيل" }}</button></form>
+<form class="inline" method="post" action="/bots/{{ b.id }}/delete"><button class="danger">حذف</button></form>
+</td>
+</tr>
+{% else %}
+<tr><td colspan="5">لا توجد بوتات.</td></tr>
+{% endfor %}
+</table>
+{% endblock %}

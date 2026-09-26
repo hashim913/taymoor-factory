@@ -1,0 +1,20 @@
+
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>{{ title or "Telegram Bot Factory V5" }}</title>
+<style>
+body{font-family:Arial,sans-serif;background:#f5f7fb;margin:0;color:#172033}
+nav{background:#172033;color:#fff;padding:16px 24px;display:flex;justify-content:space-between}
+a{color:#1769aa;text-decoration:none}.container{max-width:1100px;margin:28px auto;padding:0 16px}
+.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:16px}
+.card{background:#fff;border-radius:14px;padding:20px;box-shadow:0 3px 14px #0001}
+table{width:100%;border-collapse:collapse;background:#fff}th,td{padding:12px;border-bottom:1px solid #eee;text-align:right}
+button,.btn{background:#1769aa;color:white;border:0;padding:9px 13px;border-radius:8px;cursor:pointer}
+.danger{background:#b42318}.muted{color:#667085}
+input,textarea,select{width:100%;box-sizing:border-box;padding:10px;border:1px solid #ccd2dc;border-radius:8px;margin:7px 0 14px}
+form.inline{display:inline}.price{font-size:24px;font-weight:bold}
+</style></head>
+<body><nav><strong>🤖 Telegram Bot Factory V5</strong><span><a style="color:#fff" href="/">الرئيسية</a> · <a style="color:#fff" href="/billing">الاشتراك</a> · <a style="color:#fff" href="/logout">خروج</a></span></nav>
+<div class="container">{% block content %}{% endblock %}</div></body></html>

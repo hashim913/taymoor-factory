@@ -1,0 +1,20 @@
+
+{% extends "base.html" %}
+{% block content %}
+<a href="/">← العودة</a>
+<h1>🤖 @{{ bot.username }}</h1>
+<div class="cards">
+<div class="card"><div class="muted">الحالة</div><h2>{{ "🟢 يعمل" if bot.is_running else "🔴 متوقف" }}</h2></div>
+<div class="card"><div class="muted">القالب</div><h2>{{ bot.template }}</h2></div>
+<div class="card"><div class="muted">الرسائل</div><h2>{{ bot.total_messages }}</h2></div>
+<div class="card"><div class="muted">المستخدمون</div><h2>{{ bot.total_users }}</h2></div>
+</div>
+<div class="card" style="margin-top:20px">
+<h2>✏️ رسالة الترحيب</h2>
+<form method="post" action="/bots/{{ bot.id }}/welcome">
+<textarea name="welcome_message" rows="6">{{ setting.welcome_message if setting else "" }}</textarea>
+<p class="muted">استخدم {name} لإظهار اسم المستخدم.</p>
+<button>حفظ</button>
+</form>
+</div>
+{% endblock %}

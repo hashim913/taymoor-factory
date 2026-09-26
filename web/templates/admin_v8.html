@@ -1,0 +1,6 @@
+<!doctype html><html lang="ar" dir="rtl"><meta charset="utf-8"><title>Factory V8 Admin</title>
+<style>body{font-family:Arial;max-width:1100px;margin:30px auto;padding:10px}.card{border:1px solid #ddd;border-radius:12px;padding:15px;margin:10px 0}button{padding:8px 12px;margin:3px}pre{background:#f5f5f5;padding:10px}</style>
+<h1>لوحة إدارة Telegram Bot Factory V8</h1><button onclick="load()">تحديث</button><div id="sum" class="card"></div><div class="card"><h2>Workers</h2><pre id="workers"></pre></div><div class="card"><h2>DLQ</h2><div id="dlq"></div></div>
+<script>
+async function load(){let o=await fetch('/admin/api/overview').then(r=>r.json());sum.innerText=`Workers: ${o.workers.length} | Queue: ${o.queue_depth} | DLQ: ${o.dead_letter_depth}`;workers.textContent=JSON.stringify(o.workers,null,2);let d=await fetch('/admin/api/dlq').then(r=>r.json());dlq.innerHTML='';for(let x of d.items){let e=document.createElement('div');e.className='card';e.innerHTML='<b>'+x.id+'</b><pre>'+JSON.stringify(x,null,2)+'</pre><button onclick="act(''+x.id+'','retry')">إعادة المحاولة</button><button onclick="act(''+x.id+'','delete')">حذف</button>';dlq.appendChild(e)}}
+async function act(id,op){await fetch('/admin/api/dlq/'+encodeURIComponent(id)+(op==='retry'?'/retry':''),{method:op==='delete'?'DELETE':'POST'});load()}load();</script>

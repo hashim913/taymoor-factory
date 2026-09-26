@@ -1,0 +1,29 @@
+<!doctype html><html lang="ar" dir="rtl">
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>إدارة الدفعات</title>
+<style>
+body{font-family:Arial;max-width:1200px;margin:20px auto;padding:10px}
+.card{border:1px solid #ddd;border-radius:12px;padding:15px;margin:12px 0}
+button{padding:9px 14px;border:1px solid #aaa;border-radius:8px;margin:3px;cursor:pointer}
+table{width:100%;border-collapse:collapse}td,th{border:1px solid #ddd;padding:8px;text-align:right}
+</style></head><body>
+<h1>💳 إدارة الدفعات</h1>
+<button onclick="load()">تحديث</button>
+<select id="status" onchange="load()"><option value="review">قيد المراجعة</option><option value="">الكل</option><option value="approved">مقبولة</option><option value="rejected">مرفوضة</option></select>
+<div id="root"></div>
+<script>
+async function load(){
+ const st=document.getElementById('status').value;
+ const d=await fetch('/admin/payments?status='+encodeURIComponent(st)).then(r=>r.json());
+ let h='<table><tr><th>الطلب</th><th>المستخدم</th><th>البوت</th><th>الباقة</th><th>المبلغ</th><th>العملية</th><th>الحالة</th><th>إجراء</th></tr>';
+ for(const x of d.items){
+  h+=`<tr><td>${x.order_id}</td><td>${x.user_id}</td><td>${x.bot_id}</td><td>${x.plan}</td><td>$${x.amount_usd}</td><td>${x.transaction_ref||''}</td><td>${x.status}</td><td>${x.status==='review'?`<button onclick="act('${x.order_id}','approve')">✅ قبول</button><button onclick="act('${x.order_id}','reject')">❌ رفض</button>`:''}</td></tr>`;
+ }
+ document.getElementById('root').innerHTML=h+'</table>';
+}
+async function act(id,a){
+ await fetch('/admin/payments/'+encodeURIComponent(id)+'/'+a,{method:'POST'});
+ load();
+}
+load();
+</script></body></html>
