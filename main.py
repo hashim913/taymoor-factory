@@ -13,7 +13,7 @@ from mandatory_subscription import CHANNELS, enabled as subscription_enabled, mi
 from database import Database
 from bot_manager import BotManager
 from security import encrypt_token
-from queue import TaskQueue
+from task_queue import TaskQueue
 from cluster import Cluster
 
 

@@ -5,7 +5,7 @@ from aiogram.filters import CommandStart
 from aiogram.types import Message
 from database import Database
 from security import decrypt_token
-from queue import TaskQueue
+from task_queue import TaskQueue
 from cluster import Cluster
 from metrics import TASKS_TOTAL, BOT_EVENTS, WORKER_LOAD, TASK_LATENCY, start_metrics
 from config import WORKER_ID, WEB_BASE_URL, WEBHOOK_PATH_PREFIX, WEBHOOK_SECRET_TOKEN, HEALTHCHECK_INTERVAL, MAX_BOTS_PER_WORKER

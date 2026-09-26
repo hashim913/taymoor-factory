@@ -9,7 +9,7 @@ from starlette.middleware.sessions import SessionMiddleware
 from config import WEB_SECRET_KEY, ADMIN_IDS, TELEGRAM_LOGIN_BOT_USERNAME, PAYMENT_WEBHOOK_SECRET
 from database import Database
 from bot_manager import BotManager
-from queue import TaskQueue
+from task_queue import TaskQueue
 from cluster import Cluster
 from aiogram.types import Update
 from config import WEBHOOK_PATH_PREFIX, WEBHOOK_SECRET_TOKEN

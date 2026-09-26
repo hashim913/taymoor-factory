@@ -1,5 +1,5 @@
 import pytest
-from queue import TaskQueue
+from task_queue import TaskQueue
 class R:
  def __init__(self): self.ready=[]; self.dead=[]
  async def rpush(self,k,v): (self.ready if k.endswith('tasks') else self.dead).append(v)

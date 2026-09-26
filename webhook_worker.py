@@ -5,7 +5,7 @@ from aiogram import Bot, Dispatcher
 from aiogram.types import Update
 from database import Database
 from security import decrypt_token
-from queue import TaskQueue
+from task_queue import TaskQueue
 from webhook_router import WebhookRegistry
 from config import WORKER_ID
 
