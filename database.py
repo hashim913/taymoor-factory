@@ -1,8 +1,8 @@
 
 from datetime import datetime, timezone
 from sqlalchemy import (
-    String, Integer, Boolean, DateTime, ForeignKey, Text,
-    select, func
+    String, Integer, BigInteger, Boolean, DateTime, ForeignKey, Text,
+    select, func, text
 )
 from sqlalchemy.ext.asyncio import create_async_engine, async_sessionmaker
 from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column
@@ -20,7 +20,7 @@ class Base(DeclarativeBase):
 class User(Base):
     __tablename__ = "users"
     id: Mapped[int] = mapped_column(Integer, primary_key=True)
-    telegram_id: Mapped[int] = mapped_column(Integer, unique=True, index=True)
+    telegram_id: Mapped[int] = mapped_column(BigInteger, unique=True, index=True)
     username: Mapped[str | None] = mapped_column(String(255), nullable=True)
     first_name: Mapped[str | None] = mapped_column(String(255), nullable=True)
     bot_limit: Mapped[int] = mapped_column(Integer, default=DEFAULT_BOT_LIMIT)
@@ -68,7 +68,7 @@ class SubscriptionPlan(Base):
 class Payment(Base):
     __tablename__ = "payments"
     id: Mapped[int] = mapped_column(Integer, primary_key=True)
-    telegram_id: Mapped[int] = mapped_column(Integer, index=True)
+    telegram_id: Mapped[int] = mapped_column(BigInteger, index=True)
     plan: Mapped[str] = mapped_column(String(50))
     interval: Mapped[str] = mapped_column(String(50))
     amount: Mapped[int] = mapped_column(Integer, default=0)
@@ -87,6 +87,11 @@ class Database:
     async def init(self):
         async with self.engine.begin() as conn:
             await conn.run_sync(Base.metadata.create_all)
+            for table, column in [("users", "telegram_id"), ("payments", "telegram_id")]:
+                try:
+                    await conn.execute(text(f"ALTER TABLE {table} ALTER COLUMN {column} TYPE BIGINT"))
+                except Exception:
+                    pass
         await self.seed_plans()
 
     async def close(self):
